@@ -27,7 +27,7 @@ class Exiv2Conan(ConanFile):
             self.requires('libiconv/1.15@bincrafters/stable')
 
         if self.options.unitTests:
-            self.requires('gtest/1.8.0@bincrafters/stable')
+            self.requires('gtest/1.8.1@bincrafters/stable')
 
         if self.options.webready:
             self.requires('libcurl/7.60.0@bincrafters/stable')

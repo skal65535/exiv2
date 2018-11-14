@@ -1,9 +1,9 @@
 #include <exiv2/types.hpp>
 
+#include <gtest/gtest.h>
+
 #include <cmath>
 #include <limits>
-
-#include "gtestwrapper.h"
 
 using namespace Exiv2;
 
