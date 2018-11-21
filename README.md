@@ -17,6 +17,7 @@
     8. [Localisation](#2-8)
     9. [Building Exiv2 Documentation](#2-9)
    10. [Building Exiv2 Packages](#2-10)
+   11. [Debugging Exiv2](#2-11)
 3. [License and Support](#3)
     1. [License](#3-1)
     2. [Support](#3-2)
@@ -103,7 +104,7 @@ There are two groups of CMake options.  There are many options defined by CMake.
 
 | Options       | Purpose (_default_)       |
 |:------------- |:------------- |
-| CMAKE\_INSTALL\_PREFIX<br/>CMAKE\_BUILD\_TYPE<br/>BUILD\_SHARED\_LIBS | Where to install on your computer _**(/usr/local)**_<br/>Type of build _**(Release)**_<br/>Build exiv2lib as shared or static _**(On)**_ |
+| CMAKE\_INSTALL\_PREFIX<br/>CMAKE\_BUILD\_TYPE<br/>BUILD\_SHARED\_LIBS | Where to install on your computer _**(/usr/local)**_<br/>Type of build _**(Release)**_ See: [Debugging Exiv2](#2-11) <br/>Build exiv2lib as shared or static _**(On)**_ |
 
 Options defined by <exiv2>/CMakeLists.txt include:
 
@@ -173,7 +174,35 @@ $ g++ -std=c++98 myprog.cpp -o myprog -I/usr/local/include -L/usr/local/lib -lex
 
 When exiv2 is installed, the files required to consume Exiv2 are installed in `${CMAKE_INSTALL_PREFIX}/share/exiv2/cmake/`
 
-A Project to demonstrate consuming Exiv2 via CMake using those files is available here:  [https://github.com/piponazo/exiv2Consumer](https://github.com/piponazo/exiv2Consumer)
+You can build samples/exifprint.cpp as follows:
+
+```
+$ cd <exiv2dir>
+$ mkdir exifprint
+$ cd    exifprint
+$ *** EDIT CMakeLists.txt ***
+$ cat CMakeLists.txt
+cmake_minimum_required(VERSION 3.8)
+project(exifprint VERSION 0.0.1 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+find_package(exiv2 REQUIRED CONFIG NAMES exiv2)    # search ${CMAKE_INSTALL_PREFIX}/share/exiv2/cmake/
+add_executable(exifprint ../samples/exifprint.cpp) # compile this
+target_link_libraries(exifprint exiv2)             # link exiv2
+
+$ cmake .                                          # generate the makefile
+$ make                                             # build the code
+$ ./exifprint                                      # test your executable
+Usage: ./exifprint [ file | --version || --version-test ]
+$
+```
+
+The default cmake Generator is usually appropriate for your platform.
+
+Additional information concerning Generators for Visual Studio in [README-CONAN](README-CONAN.md)
+
 
 [TOC](#TOC)
 <name id="2-7">
@@ -337,6 +366,98 @@ CPack: - package: /path/to/exiv2/build/exiv2-0.27.0.1-Source.tar.gz generated.
 ```
 
 You may prefer to run `$ cmake --build . --config Release --target package_source`
+
+
+[TOC](#TOC)
+<name id="2-11">
+### 2.11 Debugging Exiv2
+
+1) Generating and installing a debug library
+
+In general to generate a debug library, you should use the option *Cmake* option `-DCMAKE_RELEASE_TYPE=Debug` and build in the usual way.
+
+```
+$ cd <exiv2dir>
+$ mkdir build
+$ cd build
+$ cmake .. -G "Unix Makefiles" `-DCMAKE_BUILD_TYPE=Debug`
+$ make
+$ sudo make install
+```
+
+You will have to install the library to ensure that your code is linked to the debug library.
+
+You can check that you have generated a debug build with the command:
+
+```
+$ exiv2 -vVg debug
+exiv2 0.27.0.3
+debug=1
+$
+```
+
+[TOC](#TOC)
+
+2) About preprocessor symbols NDEBUG and DEBUG
+
+In accordance with current practice, exiv2 respects the symbol *NDEBUG* which is set for Release builds.  There are sequences of code which are defined within:
+
+```
+#ifdef DEBUG
+....
+#endif
+```
+
+Those blocks of code are not compiled for debug builds.  They are provided for additional debugging information.  For example, if you are interested in additonal output from webpimage.cpp, build as follows:
+
+```
+$ cd <exiv2dir>
+$ touch src/webpimage.cpp
+$ make CXXFLAGS=-DDEBUG
+$ bin/exiv2 ....
+-- or --
+$ sudo make install
+$ exiv2     ....
+```
+
+If you are debugging library code, it is recommended that you use the exiv2 command-line as your test harness as Team Exiv2 is very familiar with this tool and able to give support.
+
+[TOC](#TOC)
+
+3) Starting the debugger
+
+This is very platform specific.  On Linux:
+
+```
+$ gdb exiv2
+```
+
+[TOC](#TOC)
+
+4) Using Debugger IDEs such as Xcode, CLion, Visual Studio, Eclipse or QtCreator
+
+I have used all those IDEs to debug Exiv2 library and applications.  All of them work.  You may find it takes initial effort, however I assure you that they all work well.
+
+I personally use CLion which has excellent integration with CMake.  It will automatically add ``-DCMAKE_BUILD_TYPE=Debug` to the cmake command.  It keeps build types in separate directories such as `<exiv2dir>/cmake-build-debug`.
+
+[TOC](#TOC)
+
+5) cmake --build . option `-config Release|Debug` and `-target install`
+
+Visual Studio and Xcode can build debug or release builds without using the option `-DCMAKE_BUILD_TYPE` because the project files generated disregard that setting and are created to build multiple types.  The option `-config Debug` can be specified on the command-line to build different a configurations.  Alternatively, if you prefer to build in the IDE, the UI provides options to select the configuration and target.
+
+With the Unix Makefile generator, the targets can be listed:
+
+```
+$ make help
+The following are some of the valid targets for this Makefile:
+... all (the default if no target is provided)
+... clean
+... depend
+... install/local
+.........
+```
+
 
 [TOC](#TOC)
 <name id="3">
