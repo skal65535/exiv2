@@ -60,7 +60,7 @@ You need CMake to build Exiv2:  https://cmake.org/download/
 <name id="2-1">
 ### 2.1 Build, Install, Use, Uninstall Exiv2 on a UNIX-like system
 
-```
+```bash
 $ cd <exiv2dir> ; mkdir build ; cd build
 $ cmake .. -G "Unix Makefiles" ; cmake --build . ; make test
 $ sudo make install
@@ -72,20 +72,20 @@ This will install the library into the "standard locations".  The library will b
 
 To execute the exiv2 command line program, you should update your path to search /usr/local/bin/
 
-```
+```bash
 $ export PATH="/usr/local/bin:$PATH"
 ```
 
  you'll also need to locate libexiv2 at run time:
 
-```
+```bash
 $ export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"      # Linux, Cygwin, MinGW/msys2
 $ export DYLD_LIBRARY_PATH="/usr/local/lib:$DYLD_LIBRARY_PATH"  # MacOS-X
 ```
 
 #### Uninstall Exiv2 on a UNIX-like system
 
-```
+```bash
 $ sudo make uninstall
 ```
 
@@ -108,7 +108,7 @@ There are two groups of CMake options.  There are many options defined by CMake.
 
 Options defined by <exiv2>/CMakeLists.txt include:
 
-```
+```bash
 576 rmills@rmillsmm:~/gnu/github/exiv2/exiv2 $ grep ^option CMakeLists.txt
 option( BUILD_SHARED_LIBS             "Build exiv2lib as a shared library"                    ON  )
 option( EXIV2_ENABLE_XMP              "Build with XMP metadata support"                       ON  )
@@ -119,7 +119,7 @@ option( EXIV2_ENABLE_PNG              "Build with png support (requires libz)"  
 ```
 
 Options are defined on the CMake command line:
-```
+```bash
 $ cmake -DBUILD_SHARED_LIBS=On -DEXIV2_ENABLE_NLS=OFF
 ```
 
@@ -154,17 +154,17 @@ In general you need to do the following:
 
 1) Application code should be written in C++ 98 and should include exiv2 headers:
 
-```
+```C++
 #include <exiv2/exiv2.hpp>
 ```
 
-2 You should compile your C++ code with the directive: `-I/usr/local/include`
+2 You should compile your C++ code with the directive: **`-I/usr/local/include`**
 
-3 You should link your code with libexiv2 using the linker options: `-lexiv2` and `-L/usr/local/lib`
+3 You should link your code with libexiv2 using the linker options: **`-lexiv2`** and **`-L/usr/local/lib`**
 
 The following is a typical command to build an link with libexiv2:
 
-```
+```bash
 $ g++ -std=c++98 myprog.cpp -o myprog -I/usr/local/include -L/usr/local/lib -lexiv2
 ```
 
@@ -176,7 +176,7 @@ When exiv2 is installed, the files required to consume Exiv2 are installed in `$
 
 You can build samples/exifprint.cpp as follows:
 
-```
+```bash
 $ cd <exiv2dir>
 $ mkdir exifprint
 $ cd    exifprint
@@ -210,13 +210,13 @@ Additional information concerning Generators for Visual Studio in [README-CONAN]
 
 When exiv2 is installed, the file exiv2.pc used by pkg-config is installed in `${CMAKE_INSTALL_PREFIX}/lib/pkgconfig`  You will need to set the following in your environment:
 
-```
+```bash
 $ export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 ```
 
 To compile and link using exiv2.pc, you usually add the following to your Makefile.
 
-```
+```bash
 PKGCONFIG=pkg-config
 CPPFLAGS := `pkg-config exiv2 --cflags`
 LDFLAGS := `pkg-config exiv2 --libs`
@@ -224,7 +224,7 @@ LDFLAGS := `pkg-config exiv2 --libs`
 
 If you are not using make, you can use pkg-config as follows:
 
-```
+```bash
 g++ -std=c++98 myprogram.cpp -o myprogram $(pkg-config exiv2 --libs --cflags)
 ```
 
@@ -234,11 +234,11 @@ g++ -std=c++98 myprogram.cpp -o myprogram $(pkg-config exiv2 --libs --cflags)
 
 Localisation is supported on "*ix" platforms:  Linux, MacOS-X, Cygwin and MinGW/msys2.  Localisation is not supported for Visual Studio builds.
 
-To build localisation support, use the CMake options `-DEXIV2_BUILD_PO=On` There are no additional build steps as the normal build command will compile the library, samples and localisation support.
+To build localisation support, use the CMake options **`-DEXIV2_BUILD_PO=On`** There are no additional build steps as the normal build command will compile the library, samples and localisation support.
 
 1) Running exiv2 in a foreign language
 
-```
+```bash
 $ env LANG=fr_FR exiv2    # env LANGUAGE=fr_FR exiv2 on Linux!
 exiv2: Une action doit être spécifié
 exiv2: Au moins un fichier est nécessaire
@@ -254,7 +254,7 @@ To support a new language which we'll designate 'xy' for this discussion:
 
 2.1) Generate a po file from the po template:
 
-```
+```bash
 $ cd <exiv2dir>
 $ mkdir -p po/xy
 $ msginit --input=po/exiv2.pot --locale=xy --output=po/xy.po
@@ -263,14 +263,14 @@ $ msginit --input=po/exiv2.pot --locale=xy --output=po/xy.po
 
 I edited the following:
 
-```
+```bash
 #: src/exiv2.cpp:237
 msgid "Manipulate the Exif metadata of images.\n"
 msgstr ""
 ```
 to:
 
-```
+```bash
 #: src/exiv2.cpp:237
 msgid "Manipulate the Exif metadata of images.\n"
 msgstr "Manipulate image metadata.\n"
@@ -278,7 +278,7 @@ msgstr "Manipulate image metadata.\n"
 
 2.3) Generate the messages file:
 
-```
+```bash
 $ mkdir -p             po/xy/LC_MESSAGES
 $ msgfmt --output-file=po/xy/LC_MESSAGES/exiv2.mo po/xy.po
 ```
@@ -287,7 +287,7 @@ $ msgfmt --output-file=po/xy/LC_MESSAGES/exiv2.mo po/xy.po
 
 You have to install your messages to test them.  It's not possible to test a message file from the build/bin directory.
 
-```
+```bash
 $ sudo cp -R  po/xy /usr/local/share/locale/xy
 $ env LANG=xy exiv2                            # env LANGUAGE=fr_FR xy on Linux!
 exiv2: An action must be specified
@@ -313,10 +313,10 @@ read the documentation on-line from the project website: http://exiv2.dyndns.org
 Additionally, complete copies of the project website are archived on the buildserver
 and can be downloaded for off-line use.  http://exiv2.dyndns.org:8080/userContent/builds/Website/
 
-To build documentation, use the CMake option `-DEXIV2_BUILD_DOC=On`.
+To build documentation, use the CMake option **`-DEXIV2_BUILD_DOC=On`**.
 Additionally, you will require an additional build step to actually build the documentation.
 
-```
+```bash
 $ cmake ..options.. -DEXIV2_BUILD_DOC=On
 $ make doc
 ```
@@ -331,7 +331,7 @@ To build the documentation, you must install the following products:
 <name id="2-10">
 ### 2.10 Building Exiv2 Packages
 
-To enable building of packages, use the CMake option `-DEXIV2_TEAM_PACKAGING=On`.
+To enable building of packages, use the CMake option **`-DEXIV2_TEAM_PACKAGING=On`**.
 
 You should not build Exiv2 Packages.  This feature is intended for use by Team Exiv2 to create Platform and Source Packages on the buildserver.
 
@@ -374,22 +374,22 @@ You may prefer to run `$ cmake --build . --config Release --target package_sourc
 
 1) Generating and installing a debug library
 
-In general to generate a debug library, you should use the option *Cmake* option `-DCMAKE_RELEASE_TYPE=Debug` and build in the usual way.
+In general to generate a debug library, you should use the option *cmake* option **`-DCMAKE_RELEASE_TYPE=Debug`** and build in the usual way.
 
-```
+```bash
 $ cd <exiv2dir>
 $ mkdir build
 $ cd build
-$ cmake .. -G "Unix Makefiles" `-DCMAKE_BUILD_TYPE=Debug`
+$ cmake .. -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
 $ make
 $ sudo make install
 ```
 
-You will have to install the library to ensure that your code is linked to the debug library.
+You must install the library to ensure that your code is linked to the debug library.
 
 You can check that you have generated a debug build with the command:
 
-```
+```bash
 $ exiv2 -vVg debug
 exiv2 0.27.0.3
 debug=1
@@ -398,26 +398,26 @@ $
 
 [TOC](#TOC)
 
-2) About preprocessor symbols NDEBUG and DEBUG
+2) About preprocessor symbols **NDEBUG** and **DEBUG**
 
 In accordance with current practice, exiv2 respects the symbol *NDEBUG* which is set for Release builds.  There are sequences of code which are defined within:
 
-```
+```C++
 #ifdef DEBUG
 ....
 #endif
 ```
 
-Those blocks of code are not compiled for debug builds.  They are provided for additional debugging information.  For example, if you are interested in additonal output from webpimage.cpp, build as follows:
+Those blocks of code are not compiled for debug builds.  They are provided for additional debugging information.  For example, if you are interested in additonal output from webpimage.cpp, you can update your build as follows:
 
-```
+```bash
 $ cd <exiv2dir>
 $ touch src/webpimage.cpp
 $ make CXXFLAGS=-DDEBUG
-$ bin/exiv2 ....
+$ bin/exiv2 ...
 -- or --
 $ sudo make install
-$ exiv2     ....
+$ exiv2     ...
 ```
 
 If you are debugging library code, it is recommended that you use the exiv2 command-line as your test harness as Team Exiv2 is very familiar with this tool and able to give support.
@@ -428,7 +428,7 @@ If you are debugging library code, it is recommended that you use the exiv2 comm
 
 This is very platform specific.  On Linux:
 
-```
+```bash
 $ gdb exiv2
 ```
 
@@ -436,19 +436,19 @@ $ gdb exiv2
 
 4) Using Debugger IDEs such as Xcode, CLion, Visual Studio, Eclipse or QtCreator
 
-I have used all those IDEs to debug Exiv2 library and applications.  All of them work.  You may find it takes initial effort, however I assure you that they all work well.
+I have used all those IDEs to debug the Exiv2 library and applications.  All of them work.  You may find it takes initial effort, however I assure you that they all work well.
 
-I personally use CLion which has excellent integration with CMake.  It will automatically add ``-DCMAKE_BUILD_TYPE=Debug` to the cmake command.  It keeps build types in separate directories such as `<exiv2dir>/cmake-build-debug`.
+I personally use CLion which has excellent integration with CMake.  It will automatically add **`-DCMAKE_BUILD_TYPE=Debug`** to the cmake command.  It keeps build types in separate directories such as **`<exiv2dir>/cmake-build-debug`**.
 
 [TOC](#TOC)
 
-5) cmake --build . option `-config Release|Debug` and `-target install`
+5) cmake --build . options **`-config Release|Debug`** and **`-target install`**
 
-Visual Studio and Xcode can build debug or release builds without using the option `-DCMAKE_BUILD_TYPE` because the project files generated disregard that setting and are created to build multiple types.  The option `-config Debug` can be specified on the command-line to build different a configurations.  Alternatively, if you prefer to build in the IDE, the UI provides options to select the configuration and target.
+Visual Studio and Xcode can build debug or release builds without using the option **`-DCMAKE_BUILD_TYPE`** because the generated project files can build multiple types.  The option **`-config Debug`** can be specified on the command-line to specify the build type.  Alternatively, if you prefer to build in the IDE, the UI provides options to select the configuration and target.
 
 With the Unix Makefile generator, the targets can be listed:
 
-```
+```bash
 $ make help
 The following are some of the valid targets for this Makefile:
 ... all (the default if no target is provided)
@@ -503,7 +503,7 @@ The test suite is a mix of bash and python scripts.  The python scripts are new 
 
 You can run the suite directly from the build:
 
-```
+```bash
 $ make build
 ...
 $ make tests
@@ -513,7 +513,7 @@ Summary report
 
 You can run individual tests in the test directory using the environment variable EXIV2\_BINDIR to specify the location of the build artifacts.  For Cygwin and MinGW/msys builds, also set EXIV2_EXT=.exe
 
-```
+```bash
 rmills@rmillsmbp-w7 ~/gnu/github/exiv2/exiv2/build $ cd ../test
 rmills@rmillsmbp-w7 ~/gnu/github/exiv2/exiv2/test $ env EXIV2_BINDIR=${PWD}/../build/bin ./icc-test.sh
 ICC jpg md5 webp md5 png md5 jpg md5
@@ -528,7 +528,7 @@ rmills@rmillsmbp-w7 ~/gnu/github/exiv2/exiv2/test $ env EXIV2_BINDIR=${PWD}/../b
 
 Use the bash interpreter for MinGW/msys2 to run the test suite.  It's essential to have a DOS Python3 interpreter on your path.  The variables EXIV2\_BINDIR and EXIV2\_EXT enable the test suite to locate the MSVC build artifacts.
 
-```
+```bash
 $ cd <exiv2dir>/build
 $ cd ../test
 $ PATH="/c/Python36:$PATH"
@@ -538,7 +538,7 @@ $ export EXIV2_BINDIR=${PWD}/../build/bin
 
 Once you have modified the PATH and and exported EXIV2\_BINDIR and EXIV2\_EXT, you can execute the test suite as described for Unix type systems:
 
-```
+```bash
 $ cd <exiv2dir>/test
 $ make test
 $ make newtests
@@ -551,11 +551,11 @@ $ ./icc-test.sh
 
 The code for the unit tests is in `<exiv2dir>/unitTests`
 
-To build the unit tests, use the CMake option `-DEXIV2_BUILD_UNIT_TESTS=On`.
+To build the unit tests, use the *cmake* option **`-DEXIV2_BUILD_UNIT_TESTS=On`**.
 
 To execute the unit tests:
 
-```
+```bash
 $ cd <exiv2dir>/build
 $ bin/unit_tests
 ```
@@ -571,14 +571,14 @@ There are many ways to set up and configure your platform.  The following notes 
 
 Update your system and install the build tools.
 
-```
+```bash
 sudo apt --yes update
 sudo apt install --yes build-essential git libxml2-utils cmake python3 libexpat1-dev libz-dev
 ```
 
 Get the code from GitHub and build
 
-```
+```bash
 $ mkdir -p ~/gnu/github/exiv2
 $ cd ~/gnu/github/exiv2
 $ git clone https://github.com/exiv2/exiv2
@@ -611,7 +611,7 @@ Install: [http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20180531.exe](http:/
 
 I use the following batch file to start the MinGW/msys2 64 bit bash shell from the Dos Command Prompt (cmd.exe)
 
-```
+```bat
 @echo off
 setlocal
 set "PATH=c:\msys64\usr\bin;c:\msys64\usr\local\bin;"
@@ -626,7 +626,7 @@ Install: [http://repo.msys2.org/distrib/i686/msys2-i686-20180531.exe](http://rep
 
 I use the following batch file to start the MinGW/msys2 32 bit bash shell from the Dos Command Prompt (cmd.exe)
 
-```
+```bat
 @echo off
 setlocal
 set "PATH=c:\msys32\usr\bin;c:\msys32\usr\local\bin;"
@@ -640,19 +640,19 @@ bash.exe -norc
 
 Install tools and dependencies:
 
-```
+```bash
 $ for i in base-devel git cmake coreutils python3 man gcc gdb make dos2unix diffutils zlib-devel libexpat-devel libiconv-devel gettext-devel; do (echo y|pacman -S $i); done
 ```
 
 You can upgrade all installed packages on your system with the following command.  For me, this broke msys32 and I had to reinstall msys32 and all the dependencies.  Your experience may be different.
 
-```
+```bash
 $ pacman -Syu
 ```
 
 #### Download exiv2 from github and build
 
-```
+```bash
 $ mkdir -p ~/gnu/github/exiv2
 $ cd       ~/gnu/github/exiv2
 $ git clone https://github.com/exiv2/exiv2
@@ -664,7 +664,14 @@ $ make
 
 #### MinGW and Regex
 
-The exiv2 command line program provides a `--grep` option which filters output.  The implementation requires the header file `<regex.h>` and supporting library to be available during the build.  When not available, the option degrades to a substring match.  Because there are several versions of `<regex.h>` available on the MinGW platform, detection of Regex is always disabled on this platform and uses substring match.
+The exiv2 command line program provides an option **`--grep`** to filter output.  The implementation requires the header file **`<regex.h>`** and supporting library to be available during the build.  When not available, the option **`--grep`** degrades to a substring match.  Because there are several versions of **`<regex.h>`** available on the MinGW platform, detection of regex is always disabled on this platform and uses substring match.  The following command reveals if regex is included in your build:
+
+```bash
+$ exiv2 -vVg regex
+exiv2 0.27.0.3
+have_regex=1
+$
+```
 
 [TOC](#TOC)
 <name id="5-4">
@@ -682,7 +689,7 @@ To build cmake from source, you need libncurses. [https://cmake.org/download/](h
 
 I use the following batch file to start the Cygwin/64 bit bash shell from the Dos Command Prompt (cmd.exe)
 
-```
+```bat
 @echo off
 setlocal
 set "PATH=c:\cygwin64\usr\local\bin;c:\cygwin64\bin;c:\cygwin64\usr\bin;c:\cygwin64\usr\sbin;"
@@ -707,7 +714,7 @@ As well as Microsoft Visual Studio, you will need to install CMake, Python3, and
 
 I use the following batch file to start cmd.exe.  I do this to reduce the complexity of the path which grows as various tools are installed on Windows.  The purpose of this script is to ensure a "stripped down path".
 
-```
+```bat
 @echo off
 setlocal
 cd  %HOMEPATH%
@@ -717,3 +724,4 @@ cmd
 
 [TOC](#TOC)
 
+Written by Robin Mills<br>robin@clanmills.com<br>Updated: 2018-11-22

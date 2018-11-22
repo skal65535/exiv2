@@ -110,7 +110,7 @@ The output from this command is quite long as conan downloads or builds zlib, ex
 ##### 1.5) Execute cmake to generate build files for your environment.
 
 ```bash
-$ cmake ..  # -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release
+$ cmake ..  # -G "Visual Studio 15 2017 Win64"
 ```
 
 <name id="1-6"></a>
@@ -216,7 +216,7 @@ the default CMake generator.  Always use the generator for your version of Visua
 
 ```bash
 c:\....\exiv2\build> conan install .. --profile msvc2017Release64 --build missing
-c:\....\exiv2\build> cmake         .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release -DEXIV2_ENABLE_NLS=0
+c:\....\exiv2\build> cmake         .. -G "Visual Studio 15 2017 Win64"
 c:\....\exiv2\build> cmake --build .  --config Release
 ```
 
@@ -236,14 +236,7 @@ CMake provides 4 Generators.  The 64 and 32 bit Generators have different names:
 | _**conan install .. --profile**_ | msvc2015Release64 | msvc2017Release64 |
 | _**cmake -G**_                   |  "Visual Studio 14 2015 Win64"    | "Visual Studio 15 2017 Win64" |
 | _**cmake**_                      | -DCMAKE\_BUILD\_TYPE=Release | -DCMAKE\_BUILD\_TYPE=Release |
-| _**profile**_ | arch=x86\_64  | arch=x86\_64 |
-| | arch\_build=x86\_64 | arch\_build=x86\_64 |
-| | build\_type=Release | build\_type=Release |
-| | compiler.runtime=MD | compiler.runtime=MD |
-| | compiler.version=14 | compiler.version=15 |
-| | compiler=Visual Studio | compiler=Visual Studio |
-| | os=Windows | os=Windows |
-| | os\_build=Windows | os\_build=Windows |
+| _**profile**_ | arch=x86\_64<br>arch\_build=x86\_64<br>build\_type=Release<br>compiler.runtime=MD<br>compiler.version=14<br>compiler=Visual Studio<br>os=Windows<br>os\_build=Windows  | arch=x86\_64<br>arch\_build=x86\_64<br>build\_type=Release<br>compiler.runtime=MD<br>compiler.version=15<br>compiler=Visual Studio<br>os=Windows<br>os\_build=Windows |
 
 ##### Debug Builds
 
@@ -274,7 +267,7 @@ The default (and recommended) builds of Exiv2 and sample applications build and 
 Additionally, you will have to use the cmake option -DBUILD\_SHARED\_LIBS=Off
 
 ```
-$ cmake -DBUILD_SHARED_LIBS=Off -DEXIV2_ENABLE_NLS=0 ..
+$ cmake -DBUILD_SHARED_LIBS=Off ..
 
 ```
 
@@ -300,7 +293,7 @@ compiler header search path.  FindIntl is a prime suspect and I believe this iss
 I recommend that you disable Natural Language Support when building with Visual Studio:
 
 ```
-$ cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release -DEXIV2_ENABLE_NLS=Off
+$ cmake .. -G "Visual Studio 15 2017 Win64"
 ```
 
 If necessary, temporarily rename c:\\cygwin64\\usr\\include as c:\\cygwin64\\usr\\uncle to hide those files when working with CMake.
@@ -598,3 +591,5 @@ $ cmake -DEXIV2_ENABLE_WEBREADY=ON -DEXIV2_ENABLE_CURL=ON -DEXIV2_ENABLE_SSH=ON 
 ```
 
 [TOC](#TOC)
+
+Written by Robin Mills<br>robin@clanmills.com<br>Updated: 2018-11-22
