@@ -146,23 +146,23 @@ See [README-CONAN](README-CONAN.md) for more information.
 <name id="2-5">
 ### 2.5 Building and linking your code with Exiv2
 
-There are detailed platform notes about linking code in releasenotes\platform\ReadMe.txt
+There are detailed platform notes about linking code in releasenotes/platform/ReadMe.txt
 
-Platform: Linux | Darwin | MinGW | CYGWIN | MSVC
+platform: { CYGWIN| Darwin | Linux | MinGW | msvc }
 
 In general you need to do the following:
 
-1) Application code should be written in C++ 98 and should include exiv2 headers:
+1) Application code should be written in C++ 98 and include exiv2 headers:
 
 ```C++
 #include <exiv2/exiv2.hpp>
 ```
 
-2 You should compile your C++ code with the directive: **`-I/usr/local/include`**
+2 Compile your C++ code with the directive: **`-I/usr/local/include`**
 
-3 You should link your code with libexiv2 using the linker options: **`-lexiv2`** and **`-L/usr/local/lib`**
+3 Link your code with libexiv2 using the linker options: **`-lexiv2`** and **`-L/usr/local/lib`**
 
-The following is a typical command to build an link with libexiv2:
+The following is a typical command to build and link with libexiv2:
 
 ```bash
 $ g++ -std=c++98 myprog.cpp -o myprog -I/usr/local/include -L/usr/local/lib -lexiv2
@@ -199,9 +199,7 @@ Usage: ./exifprint [ file | --version || --version-test ]
 $
 ```
 
-The default cmake Generator is usually appropriate for your platform.
-
-Additional information concerning Generators for Visual Studio in [README-CONAN](README-CONAN.md)
+The default cmake Generator is usually appropriate for your platform.  Additional information concerning Generators for Visual Studio in [README-CONAN](README-CONAN.md)
 
 
 [TOC](#TOC)
@@ -234,7 +232,7 @@ g++ -std=c++98 myprogram.cpp -o myprogram $(pkg-config exiv2 --libs --cflags)
 
 Localisation is supported on "*ix" platforms:  Linux, MacOS-X, Cygwin and MinGW/msys2.  Localisation is not supported for Visual Studio builds.
 
-To build localisation support, use the CMake options **`-DEXIV2_BUILD_PO=On`** There are no additional build steps as the normal build command will compile the library, samples and localisation support.
+To build localisation support, use the CMake option **`-DEXIV2_BUILD_PO=On`**. There are no additional build steps as the normal build commands will compile the library, samples and localisation support.  You must install the build to ensure the localisation message files can be found at run-time.
 
 1) Running exiv2 in a foreign language
 
@@ -289,7 +287,7 @@ You have to install your messages to test them.  It's not possible to test a mes
 
 ```bash
 $ sudo cp -R  po/xy /usr/local/share/locale/xy
-$ env LANG=xy exiv2                            # env LANGUAGE=fr_FR xy on Linux!
+$ env LANG=xy exiv2                            # env LANGUAGE=xy on Linux!
 exiv2: An action must be specified
 exiv2: At least one file is required
 Usage: exiv2 [ options ] [ action ] file ...

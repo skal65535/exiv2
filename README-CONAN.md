@@ -131,7 +131,7 @@ $ cmake --build . --config Release
 
 When you run conan install for the first time, it will detect and write the default profile ~/.conan/profile/default.  On my Ubuntu system with GCC 4.9, this is:
 
-```bash
+```ini
 [settings]
 os=Linux
 os_build=Linux
@@ -162,7 +162,6 @@ settings works with conan and different compilers:
 compiler.libcxx=libstdc++11  # will use -stdlib=libstdc++ and define _GLIBCXX_USE_CXX11_ABI=1
 compiler.libcxx=libstdc++    # will use -stdlib=libstdc++ and define _GLIBCXX_USE_CXX11_ABI=0
 compiler.libcxx=libc++       # will use -stdlib=libc++
-
 ```
 
 As a rule of thumb, set `compiler.libcxx=libstdc++11` when using a version of gcc >= 5.1.
@@ -180,7 +179,7 @@ algorithms when bringing the Exiv2 dependencies with conan, this might indicate 
 
 I use the following batch file to start cmd.exe.  I do this to reduce the complexity of the path which grows as various tools are installed on Windows.  The purpose of this script is to ensure a "stripped down path".
 
-```
+```bat
 @echo off
 setlocal
 cd  %HOMEPATH%
@@ -214,7 +213,7 @@ os_build=Windows
 In the step-by-step guide, the command `$ cmake ..` uses
 the default CMake generator.  Always use the generator for your version of Visual Studio.  For example:
 
-```bash
+```bat
 c:\....\exiv2\build> conan install .. --profile msvc2017Release64 --build missing
 c:\....\exiv2\build> cmake         .. -G "Visual Studio 15 2017 Win64"
 c:\....\exiv2\build> cmake --build .  --config Release
@@ -266,9 +265,8 @@ The default (and recommended) builds of Exiv2 and sample applications build and 
 
 Additionally, you will have to use the cmake option -DBUILD\_SHARED\_LIBS=Off
 
-```
+```bash
 $ cmake -DBUILD_SHARED_LIBS=Off ..
-
 ```
 
 ### Changing profile settings with the conan command
@@ -292,7 +290,7 @@ compiler header search path.  FindIntl is a prime suspect and I believe this iss
 
 I recommend that you disable Natural Language Support when building with Visual Studio:
 
-```
+```bash
 $ cmake .. -G "Visual Studio 15 2017 Win64"
 ```
 
@@ -585,7 +583,7 @@ Exiv2 can perform I/O using internet protocols such as https, https, ftp and ssh
 
 The feature is disabled by default.  You will need to instruct conan to build/download necessary libraries (curl, openssl and libssh) and tell CMake to link to the libraries.
 
-```
+```bash
 $ conan install .. --options webready=True
 $ cmake -DEXIV2_ENABLE_WEBREADY=ON -DEXIV2_ENABLE_CURL=ON -DEXIV2_ENABLE_SSH=ON ..
 ```
